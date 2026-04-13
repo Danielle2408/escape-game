@@ -38,3 +38,25 @@ function penalizeTime(seconds) {
   statusDiv.style.background = "#a04e2a";
   setTimeout(() => { if (gameActive) statusDiv.style.background = "#2c4a3e"; }, 1500);
 }
+
+function playSound(type) {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = 'sine';
+    let freq = 440, dur = 0.2;
+    if (type === 'click') { freq = 660; dur = 0.1; }
+    else if (type === 'success') { freq = 880; dur = 0.4; }
+    else if (type === 'error') { freq = 220; dur = 0.3; }
+    else if (type === 'door') { freq = 523.25; dur = 0.6; }
+    osc.frequency.value = freq;
+    gain.gain.value = 0.3;
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + dur);
+    osc.stop(audioCtx.currentTime + dur);
+    setTimeout(() => audioCtx.close(), dur * 1000 + 100);
+  } catch(e) { console.log("Audio non supporté"); }
+}
