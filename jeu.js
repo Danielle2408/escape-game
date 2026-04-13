@@ -20,6 +20,29 @@ function generateRandomCode() {
   ];
   return digits.join('');
 }
+function buildCluesDataFromCode(code) {
+  const digits = code.split('').map(Number);
+  const data = {};
+  for (const [id, cfg] of Object.entries(objectsConfig)) {
+    if (cfg.hasClue) {
+      const d = digits[cfg.digitPos];
+      const opText = cfg.operation(d);
+      const result = cfg.result(d);
+      data[id] = {
+        name: id,
+        message: `📌 ${opText} → résultat = ${result}. C'est le chiffre ${d}, position ${cfg.digitPos+1}.`,
+        clue: `Chiffre ${cfg.digitPos+1} = ${d} (calcul : ${opText})`,
+        digit: d,
+        position: cfg.digitPos
+      };
+    } else {
+      data[id] = {
+        name: id,
+        message: `😵 Rien d'utile... -${cfg.penalty} secondes !`,
+        penalty: cfg.penalty
+      };
+    }
+  }
 
 
   return data;
