@@ -1,3 +1,5 @@
+
+// ========== GESTION DES CLICS ==========
 // ========== 1. VARIABLES GLOBALES ==========
 let gameActive = true;
 let timerInterval = null;
